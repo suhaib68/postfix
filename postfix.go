@@ -73,7 +73,7 @@ func Postfix(Text string) (P []string) {
 	return
 }
 
-func CalcPostfix(P []string) (ans float64) {
+func Calc(P []string) (ans float64) {
 	var stack Stack
 	for _, value := range P {
 		if _, err := strconv.Atoi(value); err == nil {
