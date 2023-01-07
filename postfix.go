@@ -1,4 +1,3 @@
-// calculator project calculator.go
 package postfix
 
 import (
@@ -17,17 +16,22 @@ func (s *Stack) Push(str string) {
 	*s = append(*s, str)
 }
 
-func (s *Stack) Pop() (value string, notEmpty bool) {
-	if s.IsEmpty() {
-		notEmpty = false
-	} else {
-		notEmpty = true
+func (s *Stack) Pop() (value string) {
+	if !s.IsEmpty() {
 		index := len(*s) - 1
 		value = (*s)[index]
 		*s = (*s)[0:index]
 	}
 	return
 }
+
+func (s *Stack) LastItem() (value string) {
+	if !s.IsEmpty() {
+		value = (*s)[len(*s)-1]
+	}
+	return
+}
+
 func Calc(Text string) (ans float64) {
 	var stack Stack
 	var num string
@@ -36,7 +40,7 @@ func Calc(Text string) (ans float64) {
 	Text += " "
 	for _, l := range Text {
 		letter := string(l)
-		if _, err := strconv.Atoi(letter); err != nil {
+		if _, err := strconv.ParseFloat(letter, 64); err != nil && letter != "." {
 			if num != "" {
 				P = append(P, num)
 			}
@@ -48,19 +52,17 @@ func Calc(Text string) (ans float64) {
 			stack.Push(letter)
 		}
 		if letter == ")" {
-			for !stack.IsEmpty() && stack[len(stack)-1] != "(" {
-				value, _ := stack.Pop()
-				P = append(P, value)
+			for !stack.IsEmpty() && stack.LastItem() != "(" {
+				P = append(P, stack.Pop())
 			}
 			stack.Pop()
 		}
 		if operator(letter) {
-			if stack.IsEmpty() || (stack)[len(stack)-1] == "(" {
+			if stack.IsEmpty() || stack.LastItem() == "(" {
 				stack.Push(letter)
 			} else {
-				for !stack.IsEmpty() && (stack)[len(stack)-1] != "(" && operatorPrecedence(letter) <= operatorPrecedence((stack)[len(stack)-1]) {
-					value, _ := stack.Pop()
-					P = append(P, value)
+				for !stack.IsEmpty() && stack.LastItem() != "(" && operatorPrecedence(letter) <= operatorPrecedence(stack.LastItem()) {
+					P = append(P, stack.Pop())
 				}
 				stack.Push(letter)
 			}
@@ -68,35 +70,29 @@ func Calc(Text string) (ans float64) {
 	}
 
 	for !stack.IsEmpty() {
-		value, _ := stack.Pop()
-		P = append(P, value)
+		P = append(P, stack.Pop())
 	}
 	stack = Stack{}
 
 	for _, value := range P {
-		if _, err := strconv.Atoi(value); err == nil {
+		if _, err := strconv.ParseFloat(value, 64); err == nil {
 			stack.Push(value)
 		}
 		if operator(value) {
-			Astr, _ := stack.Pop()
-			Bstr, _ := stack.Pop()
-			A, _ := strconv.ParseFloat(Astr, 64)
-			B, _ := strconv.ParseFloat(Bstr, 64)
+			A, _ := strconv.ParseFloat(stack.Pop(), 64)
+			B, _ := strconv.ParseFloat(stack.Pop(), 64)
 			res := op(value, A, B)
 			stack.Push(fmt.Sprint(res))
 		}
 	}
-	val, _ := stack.Pop()
-	ans, _ = strconv.ParseFloat(val, 64)
+	ans, _ = strconv.ParseFloat(stack.Pop(), 64)
 	return
 }
 
 func operator(value string) (isoperator bool) {
-	array := [5]string{"+", "-", "*", "/", "^"}
-	for i := 0; i < len(array); i++ {
-		if array[i] == value {
-			isoperator = true
-		}
+	switch value {
+	case "+", "-", "*", "/", "^":
+		isoperator = true
 	}
 	return
 }
@@ -104,8 +100,10 @@ func operator(value string) (isoperator bool) {
 func operatorPrecedence(value string) (pre int) {
 	switch value {
 	case "(", ")":
+		pre = 4
+	case "^":
 		pre = 3
-	case "*", "/", "^":
+	case "*", "/":
 		pre = 2
 	case "+", "-":
 		pre = 1
@@ -127,8 +125,4 @@ func op(value string, A, B float64) (res float64) {
 		res = math.Pow(B, A)
 	}
 	return
-}
-
-func main() {
-	fmt.Println(Calc("1+2*3"))
 }
