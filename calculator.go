@@ -69,7 +69,6 @@ func Calc(Text string) (ans float64) {
 		value, _ := stack.Pop()
 		P = append(P, value)
 	}
-	fmt.Println(P)
 	stack = Stack{}
 
 	for _, value := range P {
