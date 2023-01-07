@@ -19,8 +19,7 @@ import (
 )
 
 func main() {
-	P := postfix.Postfix("1+2*3")
-	ans, _ := postfix.Calc(P)
+	ans := postfix.Calc("1+2*3")
 	fmt.Println(ans)
 }
 ```
