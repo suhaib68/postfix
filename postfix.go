@@ -3,6 +3,7 @@ package postfix
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -104,11 +105,19 @@ func operator(value string) (isoperator bool) {
 }
 
 func operatorPrecedence(value string) (pre int) {
-	if value == "(" || value == ")" {
+	// if value == "(" || value == ")" {
+	// 	pre = 3
+	// } else if value == "*" || value == "/" {
+	// 	pre = 2
+	// } else if value == "+" || value == "-" {
+	// 	pre = 1
+	// }
+	switch value {
+	case "(", ")":
 		pre = 3
-	} else if value == "*" || value == "/" {
+	case "*", "/", "^":
 		pre = 2
-	} else if value == "+" || value == "-" {
+	case "+", "-":
 		pre = 1
 	}
 	return
@@ -123,6 +132,8 @@ func op(value string, A, B float64) (res float64) {
 		res = B * A
 	} else if value == "/" {
 		res = B / A
+	} else if value == "^" {
+		res = math.Pow(B, A)
 	}
 	return
 }
