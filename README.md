@@ -14,4 +14,4 @@ example :
 
 postfix.Calc([]string{"1", "2", "3", "*", "+"}) // returns 7
 
-## example project:
+## example:
