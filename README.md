@@ -2,17 +2,11 @@
 
 math postfix
 
-#### postfix.Postfix(string) []string :
+#### postfix.Calc(string) float64 :
 
 example :
 
-postfix.Postfix("1+2*3") // returns [1 2 3 * +]
-
-#### postfix.Calc([]string) float64 :
-
-example :
-
-postfix.Calc([]string{"1", "2", "3", "*", "+"}) // returns 7
+postfix.Calc("1 + 2 * 3") // returns 7
 
 ## example:
 ```
