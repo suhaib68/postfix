@@ -28,9 +28,10 @@ func (s *Stack) Pop() (value string, notEmpty bool) {
 	}
 	return
 }
-func Postfix(Text string) (P []string) {
+func Calc(Text string) (ans float64) {
 	var stack Stack
 	var num string
+	var P []string
 
 	Text += " "
 	for _, l := range Text {
@@ -71,11 +72,7 @@ func Postfix(Text string) (P []string) {
 		P = append(P, value)
 	}
 	stack = Stack{}
-	return
-}
 
-func Calc(P []string) (ans float64) {
-	var stack Stack
 	for _, value := range P {
 		if _, err := strconv.Atoi(value); err == nil {
 			stack.Push(value)
@@ -130,4 +127,8 @@ func op(value string, A, B float64) (res float64) {
 		res = math.Pow(B, A)
 	}
 	return
+}
+
+func main() {
+	fmt.Println(Calc("1+2*3"))
 }
