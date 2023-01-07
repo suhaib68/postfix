@@ -105,13 +105,6 @@ func operator(value string) (isoperator bool) {
 }
 
 func operatorPrecedence(value string) (pre int) {
-	// if value == "(" || value == ")" {
-	// 	pre = 3
-	// } else if value == "*" || value == "/" {
-	// 	pre = 2
-	// } else if value == "+" || value == "-" {
-	// 	pre = 1
-	// }
 	switch value {
 	case "(", ")":
 		pre = 3
@@ -124,15 +117,16 @@ func operatorPrecedence(value string) (pre int) {
 }
 
 func op(value string, A, B float64) (res float64) {
-	if value == "+" {
+	switch value {
+	case "+":
 		res = B + A
-	} else if value == "-" {
+	case "-":
 		res = B - A
-	} else if value == "*" {
+	case "*":
 		res = B * A
-	} else if value == "/" {
+	case "/":
 		res = B / A
-	} else if value == "^" {
+	case "^":
 		res = math.Pow(B, A)
 	}
 	return
