@@ -15,7 +15,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/suhaib68/postfix/v1"
+	"github.com/suhaib68/postfix"
 )
 
 func main() {
